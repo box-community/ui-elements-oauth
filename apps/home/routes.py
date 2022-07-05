@@ -5,15 +5,16 @@ Copyright (c) 2019 - present AppSeed.us
 
 from apps.home import blueprint
 from flask import render_template, request
-from flask_login import login_required
+from flask_login import current_user, login_required
 from jinja2 import TemplateNotFound
 
 
 @blueprint.route('/index')
 @login_required
 def index():
+    print(current_user)
 
-    return render_template('home/index.html', segment='index')
+    return render_template('home/index.html', segment='index',avatar_url=current_user.avatar_url)
 
 
 @blueprint.route('/<template>')

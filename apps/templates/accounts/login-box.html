@@ -31,8 +31,13 @@
                 </div>
 
                 <button type="button" class="btn btn-primary" data-toggle="tooltip"
-                    onclick="window.location='redirect'">Login with box.com</button>
+                    onclick="window.location='{{auth_url}}'">Login with box.com</button>
                 <br />
+                <span class="mb-0 text-muted">
+                    {% if msg %}
+                        <span class="text-danger">{{ msg | safe }}</span>
+                    {% endif %} 
+                </span>
                 <br />
 
                 <p class="mb-0 text-muted">Don’t have an account? <a

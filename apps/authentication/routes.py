@@ -3,6 +3,8 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+from distutils.log import error
+from apps.config import Config
 from flask import render_template, redirect, request, url_for
 from flask_login import (
     current_user,
@@ -10,10 +12,13 @@ from flask_login import (
     logout_user
 )
 
+from boxsdk import OAuth2
+from boxsdk import Client
+
 from apps import db, login_manager
 from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm
-from apps.authentication.models import Users
+from apps.authentication.models import Access_Token, Csrf_token, Users
 
 from apps.authentication.util import verify_pass
 
@@ -29,7 +34,76 @@ def route_default():
 
 @blueprint.route('/login-box', methods=['GET', 'POST'])
 def login_box():
-    return render_template('accounts/login-box.html')
+    oauth = OAuth2(
+        client_id=Config.CLIENT_ID,
+        client_secret=Config.CLIENT_SECRET,
+    )
+    auth_url, csrf_token = oauth.get_authorization_url(Config.REDIRECT_URI)
+    db.session.add(Csrf_token(csrf_token))
+    db.session.commit()
+
+    return render_template('accounts/login-box.html', auth_url=auth_url, csrf_token=csrf_token)
+
+@blueprint.route('/oauth/callback')
+def oauth_callback():
+    print(request.args)
+    code=request.args.get('code')
+    state=request.args.get('state')
+    error=request.args.get('error')
+    error_description=request.args.get('error_description')
+
+    if state:
+        csrf_token = Csrf_token.query.filter_by(token=state).first()
+        if csrf_token:
+            db.session.delete(csrf_token)
+            db.session.commit()
+        else:
+            error = 'Invalid state'
+            error_description = 'CSRF token is invalid'
+
+    if error == 'access_denied':
+        return render_template('accounts/login-box.html', msg='You denied access to this application')
+    elif error:
+        return render_template('accounts/login-box.html', msg=error_description)
+
+    oauth = OAuth2(
+        client_id=Config.CLIENT_ID,
+        client_secret=Config.CLIENT_SECRET,
+    )
+    access_token, refresh_token = oauth.authenticate(code)
+
+    client = Client(oauth)
+
+    user_info = client.user().get()
+    # avatar = client.user(user_id=user_info['id']).get_avatar()
+
+    print('user_info:')
+    print('id:', user_info['id'])
+    print('name:', user_info['name'])
+    print('login:', user_info['login'])
+    print('avatar_url:', user_info['avatar_url'])
+
+    # Locate user
+    user = Users.query.filter_by(email=user_info['login']).first()
+
+    #New user?
+    if user is None:
+        #Update info
+        user = Users(username=user_info['name'], email=user_info['login'], password='',avatar_url=user_info['avatar_url'])
+
+        db.session.add(user)
+        db.session.commit()
+        user = Users.query.filter_by(email=user_info['login']).first()
+
+    # Check the User exists
+    if user:
+        login_user(user)
+    
+    db.session.add(Access_Token(user_id=user.id, access_token=access_token, refresh_token=refresh_token))
+    db.session.commit()
+
+    return redirect(url_for('home_blueprint.index'))
+
 
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():

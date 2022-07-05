@@ -13,6 +13,10 @@ class Config(object):
     # SECRET_KEY = config('SECRET_KEY'  , default='S#perS3crEt_007')
     SECRET_KEY = os.getenv('SECRET_KEY', 'S#perS3crEt_007')
 
+    CLIENT_ID = os.getenv('CLIENT_ID', '')
+    CLIENT_SECRET = os.getenv('CLIENT_SECRET', '')
+    REDIRECT_URI = os.getenv('REDIRECT_URI', '')
+
     # This will create a file in <app> FOLDER
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
     SQLALCHEMY_TRACK_MODIFICATIONS = False 
