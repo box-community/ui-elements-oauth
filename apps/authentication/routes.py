@@ -17,11 +17,19 @@ from apps.authentication.models import Users
 
 from apps.authentication.util import verify_pass
 
+# @blueprint.route('/')
+# def route_default():
+#     return redirect(url_for('authentication_blueprint.login'))
+
 @blueprint.route('/')
 def route_default():
-    return redirect(url_for('authentication_blueprint.login'))
+    return redirect(url_for('authentication_blueprint.login_box'))
 
 # Login & Registration
+
+@blueprint.route('/login-box', methods=['GET', 'POST'])
+def login_box():
+    return render_template('accounts/login-box.html')
 
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():
