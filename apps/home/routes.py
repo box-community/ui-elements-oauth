@@ -12,7 +12,6 @@ from jinja2 import TemplateNotFound
 @blueprint.route('/index')
 @login_required
 def index():
-    print(current_user)
 
     return render_template('home/index.html', segment='index',avatar_url=current_user.avatar_url)
 

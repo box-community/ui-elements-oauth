@@ -18,30 +18,26 @@ from boxsdk import Client
 from apps import db, login_manager
 from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm
-from apps.authentication.models import Access_Token, Csrf_token, Users
+from apps.authentication.models import Users
 
 from apps.authentication.util import verify_pass
-
-# @blueprint.route('/')
-# def route_default():
-#     return redirect(url_for('authentication_blueprint.login'))
+from apps.authentication.box_oauth import access_token_get, authenticate, get_authorization_url
 
 @blueprint.route('/')
 def route_default():
-    return redirect(url_for('authentication_blueprint.login_box'))
+    return redirect(url_for('authentication_blueprint.login'))
+
+# @blueprint.route('/')
+# def route_default():
+#     return redirect(url_for('authentication_blueprint.login_box'))
 
 # Login & Registration
 
 @blueprint.route('/login-box', methods=['GET', 'POST'])
 def login_box():
-    oauth = OAuth2(
-        client_id=Config.CLIENT_ID,
-        client_secret=Config.CLIENT_SECRET,
-    )
-    auth_url, csrf_token = oauth.get_authorization_url(Config.REDIRECT_URI)
-    db.session.add(Csrf_token(csrf_token))
-    db.session.commit()
-
+    
+    auth_url,csrf_token = get_authorization_url()
+    
     return render_template('accounts/login-box.html', auth_url=auth_url, csrf_token=csrf_token)
 
 @blueprint.route('/oauth/callback')
@@ -52,55 +48,18 @@ def oauth_callback():
     error=request.args.get('error')
     error_description=request.args.get('error_description')
 
-    if state:
-        csrf_token = Csrf_token.query.filter_by(token=state).first()
-        if csrf_token:
-            db.session.delete(csrf_token)
-            db.session.commit()
-        else:
-            error = 'Invalid state'
-            error_description = 'CSRF token is invalid'
+    user = Users.query.filter_by(id=current_user.id).first()
+
+    if state != user.csrf_token:
+        error = 'Invalid state'
+        error_description = 'CSRF token is invalid'
 
     if error == 'access_denied':
         return render_template('accounts/login-box.html', msg='You denied access to this application')
     elif error:
         return render_template('accounts/login-box.html', msg=error_description)
 
-    oauth = OAuth2(
-        client_id=Config.CLIENT_ID,
-        client_secret=Config.CLIENT_SECRET,
-    )
-    access_token, refresh_token = oauth.authenticate(code)
-
-    client = Client(oauth)
-
-    user_info = client.user().get()
-    # avatar = client.user(user_id=user_info['id']).get_avatar()
-
-    print('user_info:')
-    print('id:', user_info['id'])
-    print('name:', user_info['name'])
-    print('login:', user_info['login'])
-    print('avatar_url:', user_info['avatar_url'])
-
-    # Locate user
-    user = Users.query.filter_by(email=user_info['login']).first()
-
-    #New user?
-    if user is None:
-        #Update info
-        user = Users(username=user_info['name'], email=user_info['login'], password='',avatar_url=user_info['avatar_url'])
-
-        db.session.add(user)
-        db.session.commit()
-        user = Users.query.filter_by(email=user_info['login']).first()
-
-    # Check the User exists
-    if user:
-        login_user(user)
-    
-    db.session.add(Access_Token(user_id=user.id, access_token=access_token, refresh_token=refresh_token))
-    db.session.commit()
+    authenticate(code)
 
     return redirect(url_for('home_blueprint.index'))
 
@@ -121,6 +80,10 @@ def login():
         if user and verify_pass(password, user.password):
 
             login_user(user)
+            access_token = access_token_get()
+            if access_token == None:
+              return redirect(url_for('authentication_blueprint.login_box'))
+            
             return redirect(url_for('authentication_blueprint.route_default'))
 
         # Something (user or pass) is not ok
@@ -163,13 +126,17 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        # Delete user from session
-        logout_user()
+        login_user(user)
+        # A new user need to authorize the application at box.com
+        return redirect(url_for('authentication_blueprint.login_box'))
 
-        return render_template('accounts/register.html',
-                               msg='User created successfully.',
-                               success=True,
-                               form=create_account_form)
+        # Delete user from session
+        # logout_user()
+
+        # return render_template('accounts/register.html',
+        #                        msg='User created successfully.',
+        #                        success=True,
+        #                        form=create_account_form)
 
     else:
         return render_template('accounts/register.html', form=create_account_form)
