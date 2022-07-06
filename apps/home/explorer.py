@@ -22,7 +22,7 @@ def explorer(token):
 
     optionsPreviewer = {
         'logoUrl': 'box',
-        'contentSidebarProps':optionsSidebar,
+        'contentSidebarProps': optionsSidebar,
     }
 
     optionsUploader = {
@@ -50,12 +50,12 @@ def explorer(token):
         'contentUploaderProps': optionsUploader,
 
     }
-    return render_template('home/explorer.html', 
-        segment='explorer', 
-        avatar_url=current_user.avatar_url, 
-        token=token, 
-        rootFolderId=rootFolderId, 
-        options=options
-        )
+    return render_template('home/explorer.html',
+                           segment='explorer',
+                           avatar_url=current_user.avatar_url,
+                           token=token,
+                           rootFolderId=rootFolderId,
+                           options=options,
+                           )
 
     # return render_template('explorer.html',active_page=active_page, token=token, rootFolderId=rootFolderId, options=options)

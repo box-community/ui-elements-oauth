@@ -1,4 +1,5 @@
 from flask import render_template
+from flask_login import current_user
 from apps.authentication.box_oauth import box_client
 
 
@@ -60,4 +61,11 @@ def previewer(token: str):
 
     isSingle = True if file_list.count == 1 else False
 
-    return render_template('home/previewer.html', segment='previewer', token=token, file_id=file_id, options=options, isSingle=isSingle)
+    return render_template('home/previewer.html',
+                           segment='previewer',
+                           avatar_url=current_user.avatar_url,
+                           token=token,
+                           file_id=file_id,
+                           options=options,
+                           isSingle=isSingle
+                           )

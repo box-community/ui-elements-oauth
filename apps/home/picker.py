@@ -1,4 +1,5 @@
 from flask import render_template
+from flask_login import current_user
 
 
 def picker(token: str, folder_id=0, isPopup: bool = False, isPdf: bool = False):
@@ -46,6 +47,7 @@ def picker(token: str, folder_id=0, isPopup: bool = False, isPdf: bool = False):
 
     return render_template('home/picker.html',
                            segment = 'picker',
+                           avatar_url=current_user.avatar_url,
                            isPopup = isPopup,
                            token = token,
                            folder_id = folder_id,

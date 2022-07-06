@@ -1,7 +1,7 @@
 .ui-element {
-    /* height: 600px; */
     height: 600px;
     width: 100%;
+    
 }
 
 .modal-base{
@@ -22,3 +22,27 @@
     transform: translate(-50%, -50%);
     border: 1px solid #ccc;
 }
+
+.card-header > h4{
+    font-size: 2em;
+
+}
+
+.pcoded-main-container{
+    min-height: calc(100vh - 78px);
+}
+
+/* .pcoded-wrapper{
+    height: calc(100vh - 78px);
+    width: 100%;
+}
+
+.pcoded-content{
+    height: calc(100vh - 78px);
+    width: 100%;
+}
+
+.pcoded-inner-content{
+    height: calc(100vh - 78px);
+    width: 100%;
+} */

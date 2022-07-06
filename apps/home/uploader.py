@@ -1,11 +1,13 @@
 from flask import render_template
+from flask_login import current_user
 
-def uploader(token, folder_id=0,isPopup=False):
+
+def uploader(token, folder_id=0, isPopup=False):
     token = token
     folder_id = folder_id
 
     if isPopup:
-        modal = {   
+        modal = {
             'buttonLabel': 'Open modal to upload your files',
             'buttonClassName': 'btn-primary',
             'modalClassName': 'upload-modal',
@@ -21,4 +23,11 @@ def uploader(token, folder_id=0,isPopup=False):
         'modal': modal,
     }
 
-    return render_template('home/uploader.html', segment='uploader', isPopup=isPopup, token=token, folder_id=folder_id, options=options)
+    return render_template('home/uploader.html',
+                           segment='uploader',
+                           avatar_url=current_user.avatar_url,
+                           isPopup=isPopup,
+                           token=token,
+                           folder_id=folder_id,
+                           options=options
+                           )
