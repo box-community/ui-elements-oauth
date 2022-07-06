@@ -80,3 +80,29 @@ def store_tokens(access_token:str, refresh_token:str)->bool:
         return True
     return False
 
+
+def box_client() -> Client:
+    """
+    Get the client for a user
+    """
+
+    user = Users.query.filter_by(id=current_user.id).first()
+
+    if user:
+        oauth = OAuth2(client_id=Config.CLIENT_ID
+                     , client_secret=Config.CLIENT_SECRET
+                     , access_token=user.access_token
+                     , refresh_token=user.refresh_token
+                     , store_tokens=store_tokens
+                     )
+
+        client = Client(oauth)
+
+        try:
+            client.user().get() # this should force a refresh of the access token
+            return client
+        except:
+            # if there is an error, we need to re authorize the app
+            return None
+    return None
+

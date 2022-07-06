@@ -34,15 +34,33 @@
                     <label>UI Elements</label>
                 </li>
                 <li data-username="form elements advance componant validation masking wizard picker select"
-                    class="nav-item {% if 'form_elements' in segment %} active {% endif %}">
-                    <a href="/form_elements.html" class="nav-link "><span class="pcoded-micon"><i
+                    class="nav-item {% if 'explorer' in segment %} active {% endif %}">
+                    <a href="{{url_for('home_blueprint.page_explorer')}}" class="nav-link "><span class="pcoded-micon"><i
                             class="feather icon-box"></i></span><span
                             class="pcoded-mtext">Explorer</span></a>
+                </li>
+                <li data-username="form elements advance componant validation masking wizard picker select"
+                    class="nav-item {% if 'uploader' in segment %} active {% endif %}">
+                    <a href="{{url_for('home_blueprint.page_uploader')}}" class="nav-link "><span class="pcoded-micon"><i
+                            class="feather icon-upload"></i></span><span
+                            class="pcoded-mtext">Uploader</span></a>
+                </li>
+                <li data-username="form elements advance componant validation masking wizard picker select"
+                    class="nav-item {% if 'previewer' in segment %} active {% endif %}">
+                    <a href="{{url_for('home_blueprint.page_previewer')}}" class="nav-link "><span class="pcoded-micon"><i
+                            class="feather icon-eye"></i></span><span
+                            class="pcoded-mtext">Previewer</span></a>
+                </li>
+                <li data-username="form elements advance componant validation masking wizard picker select"
+                    class="nav-item {% if 'picker' in segment %} active {% endif %}">
+                    <a href="{{url_for('home_blueprint.page_picker')}}" class="nav-link "><span class="pcoded-micon"><i
+                            class="feather icon-check-square"></i></span><span
+                            class="pcoded-mtext">Picker</span></a>
                 </li>
 
                 <!-- OLD MENU -->
 
-                <li class="nav-item pcoded-menu-caption">
+                <!-- <li class="nav-item pcoded-menu-caption">
                     <label>Navigation</label>
                 </li>
                 <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project" 
@@ -135,7 +153,7 @@
                         </span>
                         <span class="pcoded-mtext">Support</span>
                     </a>
-                </li>                
+                </li>                 -->
             </ul>
         </div>
     </div>
