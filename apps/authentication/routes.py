@@ -27,16 +27,16 @@ from apps.authentication.box_oauth import access_token_get, authenticate, get_au
 def route_default():
     return redirect(url_for('authentication_blueprint.login'))
 
-# @blueprint.route('/')
-# def route_default():
-#     return redirect(url_for('authentication_blueprint.login_box'))
-
 # Login & Registration
 
 @blueprint.route('/login-box', methods=['GET', 'POST'])
 def login_box():
     
     auth_url,csrf_token = get_authorization_url()
+
+    if auth_url == None:
+        logout_user()
+        return redirect(url_for('authentication_blueprint.login'))
     
     return render_template('accounts/login-box.html', auth_url=auth_url, csrf_token=csrf_token)
 
@@ -82,6 +82,7 @@ def login():
             login_user(user)
             access_token = access_token_get()
             if access_token == None:
+							# both access and refresh tokens are expired, need to re-authorize app
               return redirect(url_for('authentication_blueprint.login_box'))
             
             return redirect(url_for('authentication_blueprint.route_default'))

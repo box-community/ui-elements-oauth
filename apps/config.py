@@ -12,10 +12,13 @@ class Config(object):
     # Set up the App SECRET_KEY
     # SECRET_KEY = config('SECRET_KEY'  , default='S#perS3crEt_007')
     SECRET_KEY = os.getenv('SECRET_KEY', 'S#perS3crEt_007')
+    FERNET_KEY = os.getenv('FERNET_KEY')
 
+    # UI Elements Demo
     CLIENT_ID = os.getenv('CLIENT_ID', '')
     CLIENT_SECRET = os.getenv('CLIENT_SECRET', '')
     REDIRECT_URI = os.getenv('REDIRECT_URI', '')
+    DEMO_FOLDER_NAME = os.getenv('DEMO_FOLDER_NAME', 'UI Elements Demo')
 
     # This will create a file in <app> FOLDER
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')

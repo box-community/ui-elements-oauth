@@ -23,6 +23,7 @@ class Users(db.Model, UserMixin):
     access_token = db.Column(db.String(512))
     refresh_token = db.Column(db.String(512))
     box_user_id = db.Column(db.String(64),unique=True)
+    box_demo_folder_id = db.Column(db.String(64),unique=True)
     csrf_token = db.Column(db.String(100), unique=True)
 
     def __init__(self, **kwargs):

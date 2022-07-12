@@ -1,8 +1,8 @@
 from flask import render_template
 from flask_login import current_user
 
-
 def explorer(token):
+
     token = token
     rootFolderId = 0
 

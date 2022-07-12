@@ -1,5 +1,7 @@
 
-from flask_login import current_user
+from flask import redirect
+from flask_login import current_user, logout_user
+from apps.authentication.cypto import decrypt_token, encrypt_token
 from apps.config import Config
 from apps import db,login_manager
 from boxsdk import OAuth2, Client
@@ -11,6 +13,10 @@ def get_authorization_url():
     Get the authorization url for the user
     """
     user = Users.query.filter_by(id=current_user.id).first()
+
+    #user must be logged in
+    if user == None:
+        return None,None
 
     oauth = OAuth2(
         client_id=Config.CLIENT_ID,
@@ -25,42 +31,39 @@ def get_authorization_url():
 
     return auth_url, csrf_token
 
-def authenticate(code:str) -> str:
+def authenticate(code:str) -> None:
     
     oauth = OAuth2(
         client_id=Config.CLIENT_ID,
         client_secret=Config.CLIENT_SECRET,
         store_tokens=store_tokens
     )
-    access_token, refresh_token = oauth.authenticate(code)
-
-    user = Users.query.filter_by(id=current_user.id).first()
-
-    return user.access_token
-
-
+    oauth.authenticate(code)
 
 def access_token_get()->str:
     """
-    Get the access token for a user
+    Get the access token for the current user
     """
     
     user = Users.query.filter_by(id=current_user.id).first()
+    access_token = decrypt_token(user.access_token)
+    refresh_token = decrypt_token(user.refresh_token)
 
     if user:
         oauth = OAuth2(client_id=Config.CLIENT_ID
                      , client_secret=Config.CLIENT_SECRET
-                     , access_token=user.access_token
-                     , refresh_token=user.refresh_token
+                     , access_token=access_token
+                     , refresh_token=refresh_token
                      , store_tokens=store_tokens
                      )
-
+        
         client = Client(oauth)
 
         try:
-            client.user().get() # this should force a refresh of the access token
+            
+            client.user().get() # this forces a refresh of the access token if it is 
             user = Users.query.filter_by(id=current_user.id).first()
-            return user.access_token
+            return decrypt_token(user.access_token)
         except:
             # if there is an error, we need to re authorize the app
             return None
@@ -68,14 +71,14 @@ def access_token_get()->str:
 
 def store_tokens(access_token:str, refresh_token:str)->bool:
     """
-    Store the access and refresh tokens for a user
+    Store the access and refresh tokens for the current user
     """
 
     user = Users.query.filter_by(id=current_user.id).first()
 
     if user:
-        user.access_token = access_token
-        user.refresh_token = refresh_token
+        user.access_token = encrypt_token(access_token)
+        user.refresh_token = encrypt_token(refresh_token)
         db.session.commit()
         return True
     return False
@@ -83,26 +86,31 @@ def store_tokens(access_token:str, refresh_token:str)->bool:
 
 def box_client() -> Client:
     """
-    Get the client for a user
+    Get the box client for the current user
     """
 
     user = Users.query.filter_by(id=current_user.id).first()
+    access_token = decrypt_token(user.access_token)
+    refresh_token = decrypt_token(user.refresh_token)
 
     if user:
         oauth = OAuth2(client_id=Config.CLIENT_ID
                      , client_secret=Config.CLIENT_SECRET
-                     , access_token=user.access_token
-                     , refresh_token=user.refresh_token
+                     , access_token=access_token
+                     , refresh_token=refresh_token
                      , store_tokens=store_tokens
                      )
 
-        client = Client(oauth)
+        # oauth.refresh(access_token)
 
-        try:
-            client.user().get() # this should force a refresh of the access token
-            return client
-        except:
-            # if there is an error, we need to re authorize the app
-            return None
+        client = Client(oauth)
+        
+        return client
+        # try:
+        #     client.user().get() # this should force a refresh of the access token
+        #     return client
+        # except:
+        #     # if there is an error, we need to re authorize the app
+        #     return None
     return None
 

@@ -1,33 +1,31 @@
 from flask import render_template
 from flask_login import current_user
 from apps.authentication.box_oauth import box_client
+from apps.authentication.models import Users
+from apps.config import Config
 
 
 def previewer(token: str):
     token = token
+    user = Users.query.filter_by(id=current_user.id).first()
 
     # root_folder = box_client().folder(folder_id='0').get()
     # file_list = root_folder.get_items(limit=10, offset=0)
     # file_id = file_list[0]
 
-    search_results = box_client().search().query(
-        'a',
-        limit=5,
-        offset=0,
-        ancestor_folders=[box_client().folder(folder_id='0')],
-        file_extensions=['pdf'],
-    )
+    # search_results = box_client().search().query(
+    #     'a',
+    #     limit=5,
+    #     offset=0,
+    #     ancestor_folders=[box_client().folder(folder_id='0')],
+    #     file_extensions=['pdf'],
+    # )
 
+    files = box_client().folder(user.box_demo_folder_id).get_items()
     file_list = []
 
-    for item in search_results:
-
-        item_with_name = item.get(fields=['name'])
-        print('matching item: ' + item_with_name.id)
-        file_list.append(item_with_name.id)
-
-    else:
-        print('no matching items')
+    for file in files:
+        file_list.append(file.id)
 
     file_id = file_list[0]
 

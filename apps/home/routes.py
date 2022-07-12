@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 import json
+from apps.authentication.models import Users
 from apps.home import blueprint
 from flask import render_template, request
 from flask_login import current_user, login_required
@@ -38,8 +39,8 @@ def page_explorer():
 @blueprint.route('/uploader')
 @login_required
 def page_uploader():
-
-    return uploader(token=access_token_get())       
+    user = Users.query.filter_by(id=current_user.id).first()
+    return uploader(token=access_token_get(),folder_id = user.box_demo_folder_id)       
 
 @blueprint.route('/previewer')
 @login_required
