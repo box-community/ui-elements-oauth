@@ -37,6 +37,6 @@ CLIENT_SECRET='YOUR_CLIENT_SECRET'
 REDIRECT_URI='http://localhost:5000/oauth/callback'
 ```
 
-> Point your browser to the server (e.g http://127.0.0.1:5000)
-> Inspect you browser console to see the javascript events.
+> Point your browser to the server (e.g http://127.0.0.1:5000).
+> Inspect your browser console to see the javascript events.
 > Server events will be printed on the terminal.
