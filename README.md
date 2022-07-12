@@ -21,6 +21,11 @@ $ pip install -r requirements.txt
 $ cp .env.example .env
 ```
 
+> Generate a secret key fo ryour app
+```bash
+$ python -c "import os; print(os.urandom(24).hex())"
+```
+
 > Edit your .env file and fill in the information
 ```
 # True for development, False for production
@@ -35,6 +40,11 @@ SECRET_KEY=YOUR_SUPER_KEY
 CLIENT_ID='YOUR_CLIENT_ID'
 CLIENT_SECRET='YOUR_CLIENT_SECRET'
 REDIRECT_URI='http://localhost:5000/oauth/callback'
+```
+
+> Run your server
+```bash
+$ flask run
 ```
 
 > Point your browser to the server (e.g http://127.0.0.1:5000).
