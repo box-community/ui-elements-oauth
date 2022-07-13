@@ -34,7 +34,7 @@ def upload_demo_files():
 	client = box_client()
 	demo_folder = client.folder(demo_folder_id)
 	
-	path = Config.basedir+Config.ASSETS_ROOT+'/demo_files/'
+	path = Config.basedir+"/"+Config.ASSETS_ROOT+'/demo_files/'
 	files = os.listdir(path)
 
 	for file in files:
