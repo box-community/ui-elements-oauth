@@ -1,6 +1,7 @@
-from flask import render_template
+from flask import render_template, session
 from flask_login import current_user
 from apps.authentication.box_oauth import box_client
+# from apps.authentication.box_oauth import box_client
 from apps.authentication.models import Users
 from apps.config import Config
 
@@ -9,19 +10,9 @@ def previewer(token: str):
     token = token
     user = Users.query.filter_by(id=current_user.id).first()
 
-    # root_folder = box_client().folder(folder_id='0').get()
-    # file_list = root_folder.get_items(limit=10, offset=0)
-    # file_id = file_list[0]
+    client = box_client()
 
-    # search_results = box_client().search().query(
-    #     'a',
-    #     limit=5,
-    #     offset=0,
-    #     ancestor_folders=[box_client().folder(folder_id='0')],
-    #     file_extensions=['pdf'],
-    # )
-
-    files = box_client().folder(user.box_demo_folder_id).get_items()
+    files = client.folder(user.box_demo_folder_id).get_items()
     file_list = []
 
     for file in files:

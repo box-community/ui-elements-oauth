@@ -57,11 +57,11 @@ def access_token_get()->str:
                      , store_tokens=store_tokens
                      )
         
-        client = Client(oauth)
+        # client = Client(oauth)
 
         try:
             
-            client.user().get() # this forces a refresh of the access token if it is 
+            # client.user().get() # this forces a refresh of the access token if it is 
             user = Users.query.filter_by(id=current_user.id).first()
             return decrypt_token(user.access_token)
         except:
