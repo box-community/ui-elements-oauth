@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from distutils.log import error
+from pydoc import cli
 from apps.authentication.demo_files import create_demo_folder, upload_demo_files
 from apps.config import Config
 from flask import render_template, redirect, request, url_for,g
@@ -92,8 +93,9 @@ def login():
 			  # both access and refresh tokens are expired, need to re-authorize app
               return redirect(url_for('authentication_blueprint.login_box'))
             
-            # create global context for client
-            # g.client = box_client()
+            client = box_client()
+            client.folder(0).get().id
+            
             return redirect(url_for('authentication_blueprint.route_default'))
 
         # Something (user or pass) is not ok
