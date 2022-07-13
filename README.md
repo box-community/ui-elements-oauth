@@ -21,9 +21,14 @@ $ pip install -r requirements.txt
 $ cp .env.example .env
 ```
 
-> Generate a secret key fo ryour app
+> Generate a secret key for your app
 ```bash
 $ python -c "import os; print(os.urandom(24).hex())"
+```
+
+> Generate a fernet (encryption) key for your app
+```bash
+$ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key()"
 ```
 
 > Edit your .env file and fill in the information

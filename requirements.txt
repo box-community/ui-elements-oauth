@@ -1,6 +1,7 @@
 alembic==1.8.0
 aniso8601==9.0.1
 attrs==21.4.0
+autopep8==1.6.0
 boxsdk==3.4.0
 certifi==2022.6.15
 cffi==1.15.1
@@ -28,6 +29,7 @@ lesscpy==0.15.0
 Mako==1.2.1
 MarkupSafe==2.1.1
 ply==3.11
+pycodestyle==2.8.0
 pycparser==2.21
 pyrsistent==0.18.1
 python-dateutil==2.8.2
@@ -38,6 +40,7 @@ requests==2.28.1
 requests-toolbelt==0.9.1
 six==1.16.0
 SQLAlchemy==1.4.29
+toml==0.10.2
 urllib3==1.26.10
 Werkzeug==2.0.3
 wrapt==1.14.1
