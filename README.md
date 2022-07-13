@@ -5,30 +5,30 @@
 
 > Get the code
 ```bash
-$ git clone git@github.com:barduinor/ui-elements-python.git
-$ cd ui-elements-python
+git clone git@github.com:barduinor/ui-elements-python.git
+cd ui-elements-python
 ```
 
 > Set up your virtual environment
 ```bash
-$ python3.10 -m venv venv
-$ source ./venv.bin/activate
-$ pip install -r requirements.txt
+python3.10 -m venv venv
+source ./venv.bin/activate
+pip install -r requirements.txt
 ```
 
 > Create your application environment
 ```bash
-$ cp .env.example .env
+cp .env.example .env
 ```
 
 > Generate a secret key for your app
 ```bash
-$ python -c "import os; print(os.urandom(24).hex())"
+python -c "import os; print(os.urandom(24).hex())"
 ```
 
 > Generate a fernet (encryption) key for your app
 ```bash
-$ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key()"
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key()"
 ```
 
 > Edit your .env file and fill in the information
@@ -49,7 +49,7 @@ REDIRECT_URI='http://localhost:5000/oauth/callback'
 
 > Run your server
 ```bash
-$ flask run
+flask run
 ```
 
 > Point your browser to the server (e.g http://127.0.0.1:5000).
