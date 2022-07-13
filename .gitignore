@@ -34,3 +34,6 @@ apps/static/assets/.temp
 
 log.json
 
+app.ini
+wsgi.py
+
