@@ -29,6 +29,12 @@
                                     <div class="card-header">
                                         <h4>Picker</h4>
                                     </div>
+                                    <div class="flash-messages">
+                                        {% for category, message in get_flashed_messages(with_categories=true) %}
+                                            <div class="alert {{ category }}">{{ message }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
                                     <div class="card-block px-0 py-3">
                                         <div class="ui-element {% if isPopup %}modal-base{%endif %}"></div>
 

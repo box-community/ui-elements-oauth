@@ -32,6 +32,15 @@
     min-height: calc(100vh - 78px);
 }
 
+.flash-messages {
+    padding: 0px;
+  }
+
+.alert{
+    margin:10px;
+}
+
+
 /* .pcoded-wrapper{
     height: calc(100vh - 78px);
     width: 100%;

@@ -46,28 +46,29 @@ def access_token_get()->str:
     """
     
     user = Users.query.filter_by(id=current_user.id).first()
+    if user == None or user.access_token == None or user.refresh_token == None:
+        return None
+
     access_token = decrypt_token(user.access_token)
     refresh_token = decrypt_token(user.refresh_token)
+    oauth = OAuth2(client_id=Config.CLIENT_ID
+                    , client_secret=Config.CLIENT_SECRET
+                    , access_token=access_token
+                    , refresh_token=refresh_token
+                    , store_tokens=store_tokens
+                    )
+    
+    # client = Client(oauth)
 
-    if user:
-        oauth = OAuth2(client_id=Config.CLIENT_ID
-                     , client_secret=Config.CLIENT_SECRET
-                     , access_token=access_token
-                     , refresh_token=refresh_token
-                     , store_tokens=store_tokens
-                     )
+    try:
         
-        # client = Client(oauth)
+        # client.user().get() # this forces a refresh of the access token if it is 
+        user = Users.query.filter_by(id=current_user.id).first()
+        return decrypt_token(user.access_token)
+    except:
+        # if there is an error, we need to re authorize the app
+        return None
 
-        try:
-            
-            # client.user().get() # this forces a refresh of the access token if it is 
-            user = Users.query.filter_by(id=current_user.id).first()
-            return decrypt_token(user.access_token)
-        except:
-            # if there is an error, we need to re authorize the app
-            return None
-    return None
 
 def store_tokens(access_token:str, refresh_token:str)->bool:
     """

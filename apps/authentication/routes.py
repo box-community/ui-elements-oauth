@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from distutils.log import error
+from apps.authentication.demo_files import create_demo_folder, upload_demo_files
 from apps.config import Config
 from flask import render_template, redirect, request, url_for,g
 from flask_login import (
@@ -62,6 +63,12 @@ def oauth_callback():
     authenticate(code)
 
     return redirect(url_for('home_blueprint.index'))
+
+@blueprint.route('/init_demo')
+def init_demo():   
+    create_demo_folder()
+    upload_demo_files() 
+    return redirect(url_for('home_blueprint.page_previewer'))
 
 
 @blueprint.route('/login', methods=['GET', 'POST'])

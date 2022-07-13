@@ -28,7 +28,7 @@ def create_demo_folder():
 	user.box_demo_folder_id = demo_folder_id
 	db.session.commit()
 
-def upload_file():
+def upload_demo_files():
 	user = Users.query.filter_by(id=current_user.id).first()
 	demo_folder_id = user.box_demo_folder_id
 	client = box_client()

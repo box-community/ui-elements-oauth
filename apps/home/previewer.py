@@ -1,4 +1,5 @@
-from flask import render_template, session
+from boxsdk import BoxAPIException
+from flask import flash, render_template, session
 from flask_login import current_user
 from apps.authentication.box_oauth import box_client
 # from apps.authentication.box_oauth import box_client
@@ -12,13 +13,18 @@ def previewer(token: str):
 
     client = box_client()
 
-    files = client.folder(user.box_demo_folder_id).get_items()
-    file_list = []
+    try:
+        files = client.folder(user.box_demo_folder_id).get_items()
+        file_list = []
 
-    for file in files:
-        file_list.append(file.id)
+        for file in files:
+            file_list.append(file.id)
 
-    file_id = file_list[0]
+        file_id = file_list[0]
+
+    except BoxAPIException:
+        flash('No files found in the demo folder. Go to settings and upload the demo files', 'alert-warning')
+        file_id = None
 
     contentSidebarProps = {
         'detailsSidebarProps': {

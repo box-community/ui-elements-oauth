@@ -4,12 +4,14 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 import json
+
+from boxsdk import BoxAPIException
 from apps.authentication.models import Users
 from apps.home import blueprint
-from flask import render_template, request
+from flask import flash, render_template, request
 from flask_login import current_user, login_required
 from jinja2 import TemplateNotFound
-from apps.authentication.box_oauth import access_token_get
+from apps.authentication.box_oauth import access_token_get, box_client
 from apps.home.explorer import explorer
 from apps.home.previewer import previewer
 from apps.home.picker import picker
@@ -40,7 +42,21 @@ def page_explorer():
 @login_required
 def page_uploader():
     user = Users.query.filter_by(id=current_user.id).first()
-    return uploader(token=access_token_get(),folder_id = user.box_demo_folder_id)       
+    folder_id = user.box_demo_folder_id
+    client = box_client()
+
+    if folder_id is None:
+        flash('Demo folder not found, all uploads will be done in the root folder. Go to settings and upload the demo files', 'alert-warning')
+        return uploader(token=access_token_get(),folder_id = 0)
+    
+    try:
+        folder_id = client.folder(folder_id).get().id
+    except BoxAPIException: 
+        # the folder does not exist
+        flash('Demo folder not found, all uploads will be done in the root folder. Go to settings and upload the demo files', 'alert-warning')
+        return uploader(token=access_token_get(),folder_id = 0)
+
+    return uploader(token=access_token_get(),folder_id = folder_id)       
 
 @blueprint.route('/previewer')
 @login_required
