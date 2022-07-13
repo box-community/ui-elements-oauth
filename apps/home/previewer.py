@@ -2,7 +2,6 @@ from boxsdk import BoxAPIException
 from flask import flash, render_template, session
 from flask_login import current_user
 from apps.authentication.box_oauth import box_client
-# from apps.authentication.box_oauth import box_client
 from apps.authentication.models import Users
 from apps.config import Config
 
@@ -23,7 +22,7 @@ def previewer(token: str):
         file_id = file_list[0]
 
     except BoxAPIException:
-        flash('No files found in the demo folder. Go to settings and upload the demo files', 'alert-warning')
+        flash('No files found in the demo folder. Go to settings and initialize the demo', 'alert-warning')
         file_id = None
 
     contentSidebarProps = {

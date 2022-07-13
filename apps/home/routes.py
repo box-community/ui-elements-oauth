@@ -46,14 +46,14 @@ def page_uploader():
     client = box_client()
 
     if folder_id is None:
-        flash('Demo folder not found, all uploads will be done in the root folder. Go to settings and upload the demo files', 'alert-warning')
+        flash('Demo folder not found, all uploads will be done in the root folder. To avoid this, go to settings and initialize the demo', 'alert-warning')
         return uploader(token=access_token_get(),folder_id = 0)
     
     try:
         folder_id = client.folder(folder_id).get().id
     except BoxAPIException: 
         # the folder does not exist
-        flash('Demo folder not found, all uploads will be done in the root folder. Go to settings and upload the demo files', 'alert-warning')
+        flash('Demo folder not found, all uploads will be done in the root folder. To avoid this, go to settings and initialize the demo', 'alert-warning')
         return uploader(token=access_token_get(),folder_id = 0)
 
     return uploader(token=access_token_get(),folder_id = folder_id)       
