@@ -69,6 +69,23 @@ def access_token_get()->str:
         # if there is an error, we need to re authorize the app
         return None
 
+def downscoped_access_token_get()->str:
+    """
+    Get the access token for the current user
+    """
+ 
+    client = box_client()
+ 
+    scope = ['base_explorer', 'item_preview', 'item_download', 'item_rename', 'item_share', 'item_delete',
+             'base_picker', 'item_upload', # , 'item_share'
+             'base_preview', 'annotation_edit', 'annotation_view_all', 'annotation_view_self', #, 'item_download'
+             'base_sidebar', 'item_comment', #'item_task', # , 'item_rename', 'item_upload'
+             'base_upload'
+             ]
+
+    downscoped_token = client.downscope_token(scopes=scope)
+    return downscoped_token.access_token
+
 
 def store_tokens(access_token:str, refresh_token:str)->bool:
     """
@@ -106,12 +123,11 @@ def box_client() -> Client:
 
         client = Client(oauth)
         
-        return client
-        # try:
-        #     client.user().get() # this should force a refresh of the access token
-        #     return client
-        # except:
-        #     # if there is an error, we need to re authorize the app
-        #     return None
+        try:
+            client.user().get() # this should force a refresh of the access token
+            return client
+        except:
+            # if there is an error, we need to re authorize the app
+            return None
     return None
 
