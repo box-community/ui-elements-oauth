@@ -5,8 +5,8 @@
 
 > Get the code
 ```bash
-git clone git@github.com:barduinor/ui-elements-python.git
-cd ui-elements-python
+git clone git@github.com:barduinor/ui-elements-oauth.git
+cd ui-elements-oauth
 ```
 
 > Set up your virtual environment
