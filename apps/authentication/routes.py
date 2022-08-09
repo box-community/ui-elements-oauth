@@ -33,7 +33,7 @@ def route_default():
 
 @blueprint.route('/login-box', methods=['GET', 'POST'])
 def login_box():
-    
+    print(f"current_user: {current_user}")
     auth_url,csrf_token = get_authorization_url()
 
     if auth_url == None:
@@ -44,22 +44,30 @@ def login_box():
 
 @blueprint.route('/oauth/callback')
 def oauth_callback():
+    print(f"current_user: {current_user}")
     print(request.args)
     code=request.args.get('code')
     state=request.args.get('state')
     error=request.args.get('error')
     error_description=request.args.get('error_description')
 
-    user = Users.query.filter_by(id=current_user.id).first()
+    user = Users.query.filter_by(csrf_token=state).first()
+    if user == None:
+        msg = 'User not found'
+    
+    elif state != user.csrf_token:
+        msg = 'CSRF token is invalid'
+    
+    elif error == 'access_denied':
+        msg='You denied access to this application'
 
-    if state != user.csrf_token:
-        error = 'Invalid state'
-        error_description = 'CSRF token is invalid'
+    else:
+        msg = error_description
 
-    if error == 'access_denied':
-        return render_template('accounts/login-box.html', msg='You denied access to this application')
-    elif error:
-        return render_template('accounts/login-box.html', msg=error_description)
+    if msg != None:
+        return render_template('accounts/login-box.html', msg=msg)
+
+    login_user(user)
 
     authenticate(code)
 
