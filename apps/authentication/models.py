@@ -16,14 +16,25 @@ class Users(db.Model, UserMixin):
     __tablename__ = 'Users'
 
     id = db.Column(db.Integer, primary_key=True)
+    
     username = db.Column(db.String(64), unique=True)
     email = db.Column(db.String(64), unique=True)
     password = db.Column(db.LargeBinary)
+    
     avatar_url = db.Column(db.String(512))
+
     access_token = db.Column(db.String(512))
+    access_token_expires_on = db.Column(db.DateTime)
+    
     refresh_token = db.Column(db.String(512))
+    refresh_token_expires_on = db.Column(db.DateTime)
+
+    downscope_token = db.Column(db.String(512))
+    downscope_token_expires_on = db.Column(db.DateTime)
+    
     box_user_id = db.Column(db.String(64),unique=True)
     box_demo_folder_id = db.Column(db.String(64),unique=False)
+    
     csrf_token = db.Column(db.String(100), unique=True)
 
     def __init__(self, **kwargs):

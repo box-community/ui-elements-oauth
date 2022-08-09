@@ -3,9 +3,7 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from distutils.log import error
-from pydoc import cli
-from apps.authentication.demo_files import create_demo_folder, upload_demo_files
+from apps.authentication.demo_files import upload_demo_files, user_check_demo_folder
 from apps.config import Config
 from flask import render_template, redirect, request, url_for,g
 from flask_login import (
@@ -13,9 +11,6 @@ from flask_login import (
     login_user,
     logout_user
 )
-
-from boxsdk import OAuth2
-from boxsdk import Client
 
 from apps import db, login_manager
 from apps.authentication import blueprint
@@ -71,11 +66,13 @@ def oauth_callback():
 
     authenticate(code)
 
+    user_check_demo_folder()
+
     return redirect(url_for('home_blueprint.index'))
 
 @blueprint.route('/init_demo')
 def init_demo():   
-    create_demo_folder()
+
     upload_demo_files() 
     return redirect(url_for('home_blueprint.page_previewer'))
 
