@@ -70,7 +70,7 @@ def check_demo_folder():
 	client = box_client()
 
 	# check if folder exists in root
-	# exact match on folder name (sting between quotes)
+	# ? exact match on folder name (string between quotes) ?
 	search_results = client.search().query(
 		'"'+Config.DEMO_FOLDER_NAME+'"', 
 		type = 'folder'	,

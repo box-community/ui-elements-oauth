@@ -51,7 +51,7 @@ def access_token_get()->str:
     """
     
     user = Users.query.filter_by(id=current_user.id).first()
-    if user == None or user.access_token == None or user.refresh_token == None:
+    if user is None or user.access_token is None or user.refresh_token is None:
         return None
 
     access_token = decrypt_token(user.access_token)
@@ -62,16 +62,11 @@ def access_token_get()->str:
                     , refresh_token=refresh_token
                     , store_tokens=store_tokens
                     )
-    
-    # client = Client(oauth)
-
+    # in some cases the access token may not exist yet
     try:
-        
-        # client.user().get() # this forces a refresh of the access token if it is 
         user = Users.query.filter_by(id=current_user.id).first()
         return decrypt_token(user.access_token)
     except:
-        # if there is an error, we need to re authorize the app
         return None
 
 def store_tokens(access_token:str, refresh_token:str)->bool:
@@ -83,14 +78,16 @@ def store_tokens(access_token:str, refresh_token:str)->bool:
 
     if user:
         user.access_token = encrypt_token(access_token)
-        user.access_token_expires_on = datetime.now() + timedelta(Config.ACCESS_TOKEN_EXPIRES_IN_SECONDS)
+        user.access_token_expires_on = datetime.now() + timedelta(seconds = Config.ACCESS_TOKEN_EXPIRES_IN_SECONDS)
         
         user.refresh_token = encrypt_token(refresh_token)
-        user.refresh_token_expires_on = datetime.now() + timedelta(Config.REFRESH_TOKEN_EXPIRES_IN_DAYS)
+        user.refresh_token_expires_on = datetime.now() + timedelta(days = Config.REFRESH_TOKEN_EXPIRES_IN_DAYS)
         
         db.session.commit()
         return True
     return False
+
+    
 def downscoped_access_token_get()->str:
     """
     Get the access token for the current user
