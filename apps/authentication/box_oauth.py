@@ -150,5 +150,5 @@ def box_client() -> Client:
 
     if user.access_token_expires_on < datetime.now():
         # access token expired, force a refresh of the access token
-        client.auth.refresh()
+        client.auth.refresh(access_token)
     return client
