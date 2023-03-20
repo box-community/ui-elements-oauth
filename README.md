@@ -1,3 +1,8 @@
+<img src="images/box-dev-logo-clip.png" 
+alt= “box-dev-logo” 
+style="margin-left:-10px;"
+width=40%;>
+
 # Getting started with Box OAuth 2.0 using Python & Flask
 > This is the companion app to illustrate [this medium article](https://medium.com/@barbosa-rmv/getting-started-with-box-oauth-2-0-using-python-flask-77607441170d). Check it out.
 
