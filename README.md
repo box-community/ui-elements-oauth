@@ -65,9 +65,9 @@ REDIRECT_URI='http://localhost:5000/oauth/callback'
 
 > Run your server
 ```bash
-flask run
+flask run --host localhost --port 5000
 ```
 
-> Point your browser to the server (e.g http://127.0.0.1:5000).
+> Point your browser to the server (e.g http://localhost:5000).
 > Inspect your browser console to see the javascript events.
 > Server events will be printed on the terminal.

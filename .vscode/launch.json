@@ -15,7 +15,9 @@
             },
             "args": [
                 "run",
-                "--no-debugger"
+                "--no-debugger",
+                "--host","localhost",
+                "--port","5000"
             ],
             "jinja": true,
             "justMyCode": true
