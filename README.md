@@ -55,10 +55,12 @@ REDIRECT_URI='http://localhost:5000/oauth/callback'
 ```
 
 > Update your box application settings in the box developer console
->Include your redirect URI in the list of allowed redirect URIs
+> Include your redirect URI in the list of allowed redirect URIs
+
 >http://localhost:5000/oauth/callback
 >
 >Include your allowed origins in the CORS Domain section
+
 >http://localhost:5000/oauth/callback
 
 > Run your server
