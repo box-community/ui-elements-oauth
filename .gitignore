@@ -14,12 +14,13 @@ __pycache__/
 # venv
 env
 venv
+.venv
 .env
 
 # other
 .DS_Store
 
-# sphinx docs 
+# sphinx docs
 _build
 _static
 _templates
@@ -36,4 +37,3 @@ log.json
 
 app.ini
 wsgi.py
-

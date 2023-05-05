@@ -16,8 +16,9 @@ cd ui-elements-oauth
 
 > Set up your virtual environment
 ```bash
-python3.10 -m venv venv
-source ./venv.bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
@@ -33,7 +34,7 @@ python -c "import os; print(os.urandom(24).hex())"
 
 > Generate a fernet (encryption) key for your app
 ```bash
-python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key()"
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key())"
 ```
 
 > Edit your .env file and fill in the information
