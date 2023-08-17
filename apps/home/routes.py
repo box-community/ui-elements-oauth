@@ -16,42 +16,49 @@ from apps.home.picker import picker
 from apps.home.uploader import uploader
 
 
-@blueprint.route('/index')
+@blueprint.route("/index")
 @login_required
 def index():
     return explorer(token=downscoped_access_token_get())
 
-@blueprint.route('/event/', methods=['POST'])
+
+@blueprint.route("/event/", methods=["POST"])
 def event():
     request_data = request.get_json()
-    print('***********************************************************')
+    print("***********************************************************")
     print(request_data)
-    print('***********************************************************')
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+    print("***********************************************************")
+    return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
 
-@blueprint.route('/explorer')
+
+@blueprint.route("/explorer")
 @login_required
 def page_explorer():
-    return explorer(token=downscoped_access_token_get())    
+    return explorer(token=downscoped_access_token_get())
 
-@blueprint.route('/uploader')
+
+@blueprint.route("/uploader")
 @login_required
 def page_uploader():
     folder_id = user_check_demo_folder()
-    if folder_id == 0 :
-        flash('No demo folder found. All uploads will end up in the root folder. Go to settings and initialize the demo', 'alert-warning')
-    return uploader(token=downscoped_access_token_get(),folder_id = folder_id)       
+    if folder_id == 0:
+        flash(
+            "No demo folder found. All uploads will end up in the root folder. Go to settings and initialize the demo",
+            "alert-warning",
+        )
+    return uploader(token=downscoped_access_token_get(), folder_id=folder_id)
 
-@blueprint.route('/previewer')
+
+@blueprint.route("/previewer")
 @login_required
 def page_previewer():
     file_list = demo_file_ids_get()
     if not file_list:
-        flash('No files found in the demo folder. Go to settings and initialize the demo', 'alert-warning')
+        flash("No files found in the demo folder. Go to settings and initialize the demo", "alert-warning")
     return previewer(token=downscoped_access_token_get(), file_list=file_list)
 
-@blueprint.route('/picker')
+
+@blueprint.route("/picker")
 @login_required
 def page_picker():
-    return picker(token=downscoped_access_token_get())   
-
+    return picker(token=downscoped_access_token_get())
